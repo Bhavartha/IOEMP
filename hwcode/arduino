@@ -1,0 +1,183 @@
+#include <SoftwareSerial.h>
+
+#include "FirebaseESP8266.h"
+
+#include <ESP8266WiFi.h>
+
+ 
+
+#define FIREBASE_HOST "FIREBASE_HOST"
+
+#define FIREBASE_AUTH "FIREBASE_AUTH"
+
+#define WIFI_SSID "WIFI_SSID"
+
+#define WIFI_PASSWORD "WIFI_PASSWORD"
+
+ 
+
+//Define Firebase Data objects
+
+FirebaseData fbd;
+
+//int sensorThres = 400;
+
+ 
+
+void setup() {
+
+      WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+
+    Serial.print("Connecting to Wi-Fi");
+
+    while (WiFi.status() != WL_CONNECTED)
+
+    {
+
+        delay(300);
+
+ 
+
+    }
+
+ 
+
+    Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
+
+    Firebase.reconnectWiFi(true);
+
+ 
+
+    if (!Firebase.beginStream(fbd,"/"))
+
+    {
+
+        Serial.println("Could not begin stream");
+
+        Serial.println("REASON: " + fbd.errorReason());
+
+        Serial.println();
+
+    }
+
+  pinMode(13, OUTPUT);
+
+  pinMode(12, OUTPUT);
+
+  pinMode(11, OUTPUT); //defines all the LED pins to output
+
+  pinMode(10, OUTPUT);
+
+  pinMode(9, INPUT);
+
+   Serial.begin(9600);
+
+   espSerial1.begin(9600);
+
+}
+
+ void loop() {
+
+      int digitalSensor = digitalRead(9);
+
+   Serial.print("GAS: ");
+
+   Serial.println(digitalSensor);
+
+  
+
+      //checks if it has reached the threshold value
+
+ 
+
+    if (digitalSensor < 1)
+
+  {
+
+    digitalWrite(11, HIGH);
+
+    tone(8, 1000, 200);
+
+   }
+
+   else
+
+        {
+
+         digitalWrite(11, LOW);
+
+         noTone(8);
+
+        }
+
+ 
+
+int vol = analogRead(A0) * (3.0 / 1023.0 * 100);         //analog read the temperature sensor voltage
+
+Serial.print ("Temperature: ");
+
+Serial.println(vol);
+
+ 
+
+   if (vol >= 30)                                           //if the temperature is normal
+
+    {
+
+     digitalWrite(10, HIGH);
+
+    }
+
+ 
+
+   else                                              // if the temperature is high
+
+    {                       
+
+     digitalWrite(10, LOW);
+
+    }
+
+    void loop()
+
+   {
+
+    int digitalSensor = digitalRead(9);
+
+    Serial.print("Gas: ");
+
+    Serial.print(G);
+
+    Serial.print("% ");
+
+    Serial.print("Tempertaure: ");
+
+    Serial.print(t);
+
+    Serial.println("C");
+
+    str =String("coming from arduino: ")+String("Gas= ")+String(h)+String("Temperature= ")+String(t);
+
+    espSerial.println(str);
+
+     void loop()
+
+{
+
+    Firebase.setInt(fbd, "/1/gas", g1)
+
+    Firebase.setInt(fbd, "/2/buzzer", g2)
+
+    Firebase.setInt(fbd, "/3/temp", t1)
+
+    Firebase.setInt(fbd, "/4/fan", t2)
+
+    
+
+}
+
+    delay(1000);
+
+   }
+
+ }  
